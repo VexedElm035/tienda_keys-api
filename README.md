@@ -38,7 +38,7 @@ Hay que meterse a esta ruta:
 ```sh
 cd vendor/nunomaduro/termwind/src
 ```
-Modificar el: HtmlRenderer.php, en la linea 31 y eliminar el ENUM LIBXML_NOXMLDECL  
+Modificar el: HtmlRenderer.php, en la linea 39 aprox y eliminar el LIBXML_NOXMLDECL al final de donde parece que se importan varias librerias  
 
 Despues volvemos a la ruta principal de la la app en laravel y ejecutamos:
 
