@@ -26,6 +26,7 @@ Hay que editar el archivo de php.ini en la seccion de Dynamic extensions para ha
 - extension=iconv
 
 - extension=intl
+
 Para habilitarlas solo se les quita el ";" para que no esten comentadas
 
 # Clonar el repositorio e instalar las dependencias
