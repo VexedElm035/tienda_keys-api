@@ -15,12 +15,17 @@ php --ini
 ```
 
 Hay que editar el archivo de php.ini en la seccion de Dynamic extensions para habilitar las siguientes extensiones:
-extension=pdo_mysql
-extension=mysqli
-extension=gd
-extension=curl
-extension=iconv
-extension=intl
+- extension=pdo_mysql
+
+- extension=mysqli
+
+- extension=gd
+
+- extension=curl
+
+- extension=iconv
+
+- extension=intl
 Para habilitarlas solo se les quita el ";" para que no esten comentadas
 
 # Clonar el repositorio e instalar las dependencias
