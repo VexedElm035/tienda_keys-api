@@ -4,6 +4,7 @@
 node --version
 npm --version
 php --version
+composer --version
 ```
 
 # Verificar que esten habilitadas las extensiones de php
