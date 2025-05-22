@@ -9,7 +9,7 @@ class GameKeyController extends Controller
 {
     public function index()
     {
-        return GameKey::with('seller')->get();
+        return GameKey::with('seller', 'game')->get();
     }
 
     public function store(Request $request)

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GameKey extends Model
 {
@@ -30,6 +31,11 @@ class GameKey extends Model
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'key_id');
+    }
+
+    public function cart(): HasMany
+    {
+        return $this->hasMany(Cart::class, 'key_id'); 
     }
 }
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('launch_date')->nullable();
             $table->string('publisher', 100)->nullable();
             $table->string('available_platforms', 255)->nullable();
-            $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
+            $table->string('genres', 100)->nullable();
             $table->timestamps();
         });
 
