@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Game extends Model
 {
     protected $fillable = [
-        'name', 'img', 'description', 'launch_date', 'publisher',
+        'igdb_id', 'name', 'img', 'description', 'launch_date', 'publisher',
         'available_platforms', 'genre_id'
     ];
 

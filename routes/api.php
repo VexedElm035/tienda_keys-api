@@ -11,6 +11,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\IGDBController;
 
 Route::apiResource('games', GameController::class);
 Route::apiResource('gamekeys', GameKeyController::class);
@@ -26,6 +27,9 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/upload', [FileUploadController::class, 'upload']);
 Route::get('/uploads/{file}', [FileUploadController::class, 'getFile']);
 
+Route::get('/igdb/games', [IGDBController::class, 'getPopularGames']);
+Route::get('/igdb/search-games', [IGDBController::class, 'searchGames']);
+Route::post('/igdb/sync-game', [IGDBController::class, 'syncGame']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
