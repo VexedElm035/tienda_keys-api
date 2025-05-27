@@ -12,6 +12,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\IGDBController;
+use App\Http\Controllers\AdminController;
 
 Route::apiResource('games', GameController::class);
 Route::apiResource('gamekeys', GameKeyController::class);
@@ -30,6 +31,9 @@ Route::get('/uploads/{file}', [FileUploadController::class, 'getFile']);
 Route::get('/igdb/games', [IGDBController::class, 'getPopularGames']);
 Route::get('/igdb/search-games', [IGDBController::class, 'searchGames']);
 Route::post('/igdb/sync-game', [IGDBController::class, 'syncGame']);
+
+Route::get('/admin/earnings', [AdminController::class, 'getEarnings']);
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();

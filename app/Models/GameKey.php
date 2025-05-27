@@ -10,7 +10,7 @@ class GameKey extends Model
 {
     protected $fillable = [
         'game_id', 'state', 'region', 'price', 'tax',
-        'delivery_time', 'seller_id', 'platform', 'sale_id'
+        'delivery_time', 'seller_id', 'platform', 'sale_id', 'key'
     ];
 
     public function game(): BelongsTo

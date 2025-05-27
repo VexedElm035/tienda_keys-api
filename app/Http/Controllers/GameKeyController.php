@@ -18,11 +18,13 @@ class GameKeyController extends Controller
             'game_id' => 'required|exists:games,id',
             'state' => 'required|string',
             'region' => 'required|string',
+            'key' => 'required|string',
             'price' => 'required|numeric',
             'tax' => 'required|numeric',
             'delivery_time' => 'required|string',
             'seller_id' => 'required|exists:users,id',
             'platform' => 'required|string',
+            
             'sale_id' => 'nullable|exists:sales,id'
         ]);
         $gameKey = GameKey::create($validated);

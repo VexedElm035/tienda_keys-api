@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
+
 class PurchaseController extends Controller
 {
     /**
@@ -11,7 +13,13 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        //
+        // Obtener solo las compras del usuario autenticado
+        $purchases = Purchase::with(['user', 'gameKey.game'])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($purchases);
     }
 
     public function store(Request $request)
@@ -24,8 +32,14 @@ class PurchaseController extends Controller
             'tax' => 'required|numeric',
             'state' => 'required|string',
         ]);
+        
+        // Asegurar que el user_id coincide con el usuario autenticado
+        if ($validated['user_id'] != Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
         $purchase = Purchase::create($validated);
-        return response()->json($purchase, 200);
+        return response()->json($purchase, 201);
     }
 
     /**
