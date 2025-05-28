@@ -7,10 +7,24 @@ use Illuminate\Http\Request;
 
 class GameKeyController extends Controller
 {
+
     public function index()
     {
         return GameKey::with('seller', 'game')->get();
     }
+
+    public function index2(Request $request)
+{
+    $query = GameKey::with('game')
+        ->when($request->seller_id, function($q) use ($request) {
+            return $q->where('seller_id', $request->seller_id);
+        })
+        ->when($request->state, function($q) use ($request) {
+            return $q->where('state', $request->state);
+        });
+
+    return response()->json($query->get());
+}
 
     public function store(Request $request)
     {
@@ -33,7 +47,7 @@ class GameKeyController extends Controller
 
     public function show($id)
     {
-        return GameKey::findOrFail($id);
+        return GameKey::with('seller', 'game')->findOrFail($id);
     }
 
     public function update(Request $request, $id)

@@ -27,8 +27,6 @@ class UserController extends Controller
         }
     
         $user = Auth::user();
-    
-      
         $token = $user->createToken('auth_token')->plainTextToken;
     
         return response([
@@ -38,43 +36,57 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function store(Request $request)
+    {   
+        $validated = $request->validate([
+            'username' => 'required|string',
+            'email' => 'required|string',
+            'password' => 'required|string',
+            'avatar' => 'nullable|string',
+            'role' => 'required|string|in:admin,user,seller',
+        ]);
 
+        $validated['password'] = Hash::make($validated['password']);
 
-public function store(Request $request)
-{   
-    $validated = $request->validate([
-        'username' => 'required|string',
-        'email' => 'required|string',
-        'password' => 'required|string',
-        'avatar' => 'nullable|string',
-        'role' => 'required|string|in:admin,user,seller',
-    ]);
-
-    $validated['password'] = Hash::make($validated['password']);
-
-    $user = User::create($validated);
-    return response()->json($user, 200);
-}
-
-public function show(string $id)
-{
-    $authUser = Auth::user();
-
-    if ($authUser->id != $id && $authUser->role !== 'admin') {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        $user = User::create($validated);
+        return response()->json($user, 200);
     }
 
-    return User::findOrFail($id);
-}
-
-    public function edit(string $id)
+    public function show(string $id)
     {
-        //
+        $authUser = Auth::user();
+
+        if ($authUser->id != $id && $authUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return User::findOrFail($id);
     }
 
-    public function update(UserRequest $request, string $id)
+   public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        
+        // Verificar permisos
+        $authUser = Auth::user();
+        if ($authUser->id != $id && $authUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
+        return response()->json($user);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        $authUser = Auth::user();
+
+        if ($authUser->id != $id && $authUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $user->update($request->all());
+        return response()->json($user);
     }
 
     /**
