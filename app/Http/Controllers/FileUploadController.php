@@ -48,4 +48,25 @@ class FileUploadController extends Controller
             'message' => 'File not found',
         ], 404);
     }
+    public function listUploads()
+    {
+        $files = Storage::disk('public')->files('uploads');
+        $fileNames = array_map(function ($file) {
+            return basename($file);
+        }, $files);
+
+        return response()->json($fileNames);
+    }
+
+    public function deleteFile($filename)
+    {
+        $path = "uploads/{$filename}";
+
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'File not found'], 404);
+    }
 }

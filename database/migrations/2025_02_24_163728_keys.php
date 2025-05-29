@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('delivery_time', 100);
             $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
             $table->string('platform', 100);
+            $table->string('key', 64)->nullable();
             $table->foreignId('sale_id')->nullable()->constrained('sales')->onDelete('set null');
             $table->timestamps();
         });

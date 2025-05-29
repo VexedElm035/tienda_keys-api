@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Message;
+
 
 class PurchaseController extends Controller
 {
@@ -18,7 +20,7 @@ class PurchaseController extends Controller
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-            
+
         return response()->json($purchases);
     }
 
@@ -32,22 +34,50 @@ class PurchaseController extends Controller
             'tax' => 'required|numeric',
             'state' => 'required|string',
         ]);
-        
-        // Asegurar que el user_id coincide con el usuario autenticado
+
         if ($validated['user_id'] != Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         $purchase = Purchase::create($validated);
+
+        // Notificar comprador
+        Message::create([
+            'sender_id' => 1, // ID del sistema
+            'receiver_id' => $purchase->user_id,
+            'purchase_id' => $purchase->id,
+            'subject' => 'Compra exitosa',
+            'content' => 'Has comprado la clave para ' . $purchase->gameKey->game->name,
+            'type' => 'purchase'
+        ]);
+
+        // Notificar vendedor
+        Message::create([
+            'sender_id' => 1,
+            'receiver_id' => $purchase->gameKey->seller_id,
+            'purchase_id' => $purchase->id,
+            'subject' => 'Venta realizada',
+            'content' => $purchase->user->username . ' ha comprado tu clave de ' . $purchase->gameKey->game->name,
+            'type' => 'sale'
+        ]);
+
         return response()->json($purchase, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $purchase = Purchase::with(['gameKey.game', 'user'])
+            ->findOrFail($id);
+
+        // Verificar que el usuario es el dueño de la compra
+        if ($purchase->user_id != auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        return response()->json($purchase);
     }
 
     /**

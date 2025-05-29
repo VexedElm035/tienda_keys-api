@@ -14,17 +14,17 @@ class GameKeyController extends Controller
     }
 
     public function index2(Request $request)
-{
-    $query = GameKey::with('game')
-        ->when($request->seller_id, function($q) use ($request) {
-            return $q->where('seller_id', $request->seller_id);
-        })
-        ->when($request->state, function($q) use ($request) {
-            return $q->where('state', $request->state);
-        });
+    {
+        $query = GameKey::with('game')
+            ->when($request->seller_id, function ($q) use ($request) {
+                return $q->where('seller_id', $request->seller_id);
+            })
+            ->when($request->state, function ($q) use ($request) {
+                return $q->where('state', $request->state);
+            });
 
-    return response()->json($query->get());
-}
+        return response()->json($query->get());
+    }
 
     public function store(Request $request)
     {
@@ -38,7 +38,7 @@ class GameKeyController extends Controller
             'delivery_time' => 'required|string',
             'seller_id' => 'required|exists:users,id',
             'platform' => 'required|string',
-            
+
             'sale_id' => 'nullable|exists:sales,id'
         ]);
         $gameKey = GameKey::create($validated);

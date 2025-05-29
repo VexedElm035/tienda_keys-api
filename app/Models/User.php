@@ -38,8 +38,29 @@ class User extends Authenticatable
         return $this->hasMany(SupportMessage::class);
     }
 
-    public function cart(): HasMany
+    public function cartItems()
     {
-        return $this->hasMany(Cart::class, 'user_id'); 
+        return $this->hasMany(Cart::class, 'user_id');
+    }
+
+    // Opcional: alias para compatibilidad
+    public function cart()
+    {
+        return $this->cartItems();
+    }
+
+    public function messagesReceived(): HasMany
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
+
+    public function messagesSent(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function unreadMessagesCount(): int
+    {
+        return $this->messagesReceived()->unread()->count();
     }
 }

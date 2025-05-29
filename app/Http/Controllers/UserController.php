@@ -13,22 +13,22 @@ class UserController extends Controller
 {
     public function index()
     {
-        
+        return response()->json(User::all(), 200);
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-    
+
         if (!Auth::attempt($credentials)) {
             return response([
                 'message' => 'wrong login',
             ], 401);
         }
-    
+
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
-    
+
         return response([
             'message' => 'acceso autorizado',
             'user' => $user,
@@ -37,7 +37,7 @@ class UserController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
         $validated = $request->validate([
             'username' => 'required|string',
             'email' => 'required|string',
@@ -63,16 +63,16 @@ class UserController extends Controller
         return User::findOrFail($id);
     }
 
-   public function edit(string $id)
+    public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        
+
         // Verificar permisos
         $authUser = Auth::user();
         if ($authUser->id != $id && $authUser->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        
+
         return response()->json($user);
     }
 
