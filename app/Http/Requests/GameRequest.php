@@ -27,7 +27,7 @@ class GameRequest extends FormRequest
             'available_platforms' => 'required|string',
             'launch_date' => 'required|date',
             'img' => 'nullable|max:2048',
-            'genre_id' => 'required|exists:genres,id',
+            'genre_id' => 'nullable',
             'publisher' => 'required|string|max:255',
         ];
     }
