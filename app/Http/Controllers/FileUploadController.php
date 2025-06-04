@@ -19,7 +19,7 @@ class FileUploadController extends Controller
             $imageName = pathinfo($image, PATHINFO_FILENAME) . '.webp';
             $imagePath = "uploads/$imageName";
 
-            $webpImage = Image::make($image)->encode('webp', 90); // 90 valor de la calidad
+            $webpImage = Image::make($image)->encode('webp', 90); // 90 valor de calidad de imagen
             Storage::disk('public')->put($imagePath, $webpImage);
 
             return response()->json([

@@ -21,13 +21,11 @@ class CartController extends Controller
             'key_id' => 'required|exists:game_keys,id'
         ]);
 
-        // Verificar disponibilidad
         $gameKey = GameKey::findOrFail($request->key_id);
         if ($gameKey->state !== 'disponible') {
             return response()->json(['error' => 'Esta clave ya no está disponible'], 422);
         }
 
-        // Evitar duplicados
         $existingItem = Cart::where('user_id', Auth::id())
             ->where('key_id', $request->key_id)
             ->first();
@@ -61,7 +59,6 @@ class CartController extends Controller
         return response()->json(['count' => $count]);
     }
 
-    // app/Http/Controllers/CartController.php
     public function clear()
     {
         try {
@@ -75,7 +72,7 @@ class CartController extends Controller
             $deletedCount = 0;
 
             foreach ($cartItems as $item) {
-                $this->destroy($item->id); // Llama al método destroy para cada item
+                $this->destroy($item->id);
                 $deletedCount++;
             }
 

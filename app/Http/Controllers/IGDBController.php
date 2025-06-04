@@ -138,14 +138,11 @@ class IGDBController extends Controller
         });
     }
 
-    // app/Http/Controllers/IGDBController.php
-
     public function syncGame(Request $request)
     {
         try {
             $igdbId = $request->input('igdb_id');
 
-            // Primero verifica si el juego ya existe localmente
             $localGame = Game::where('igdb_id', $igdbId)->first();
 
             if ($localGame) {
@@ -156,7 +153,6 @@ class IGDBController extends Controller
                 ]);
             }
 
-            // Si no existe, obtén los detalles completos de IGDB
             $accessToken = $this->getAccessToken();
 
             $query = "fields name,summary,first_release_date,cover.url,involved_companies.company.name,platforms.name,platforms.abbreviation,genres.name; 
@@ -182,7 +178,6 @@ class IGDBController extends Controller
             $imageUrl = isset($igdbGame['cover'])
                 ? 'https:' . str_replace('t_thumb', 't_cover_big', $igdbGame['cover']['url'])
                 : null;
-            // Transforma los datos de IGDB a tu formato local
             $gameData = [
                 'igdb_id' => $igdbId,
                 'name' => $igdbGame['name'],
@@ -207,7 +202,6 @@ class IGDBController extends Controller
                     : null
             ];
 
-            // Crea el juego en tu base de datos local
             $game = Game::create($gameData);
 
             return response()->json([

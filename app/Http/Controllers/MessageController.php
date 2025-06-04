@@ -5,21 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $messages = $user->messagesReceived()
-            ->with(['sender', 'purchase.gameKey.game'])
+        // Sin autenticación: ahora obtiene todos los mensajes (¡Cuidado con la privacidad!)
+        $messages = Message::with(['sender', 'purchase.gameKey.game'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return response()->json([
             'messages' => $messages,
-            'unread_count' => $user->unreadMessagesCount()
+            'unread_count' => 0 // Ya no hay un usuario autenticado para contar mensajes no leídos
         ]);
     }
 
@@ -28,12 +26,7 @@ class MessageController extends Controller
         $message = Message::with(['sender', 'purchase.gameKey.game'])
             ->findOrFail($id);
 
-        // Verificar permisos
-        if ($message->receiver_id != Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
-        // Marcar como leído si no lo está
+        // Quitamos la verificación de receptor
         if (!$message->is_read) {
             $message->markAsRead();
         }
@@ -44,11 +37,6 @@ class MessageController extends Controller
     public function markAsRead($id)
     {
         $message = Message::findOrFail($id);
-
-        if ($message->receiver_id != Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
         $message->markAsRead();
 
         return response()->json(['success' => true]);
@@ -56,8 +44,7 @@ class MessageController extends Controller
 
     public function unreadCount()
     {
-        return response()->json([
-            'count' => Auth::user()->unreadMessagesCount()
-        ]);
+        // Sin autenticación, no hay forma de contar mensajes no leídos de un usuario
+        return response()->json(['count' => 0]);
     }
 }

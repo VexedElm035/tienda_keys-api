@@ -53,16 +53,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('cart/clear', [CartController::class, 'clear']);
 });
 
-// routes/api.php
 Route::middleware(['auth:sanctum'])->group(function () {
-    // Ruta para estadísticas del vendedor
     Route::get('/sellers/{seller}/stats', function (User $seller) {
         $totalEarnings = GameKey::where('seller_id', $seller->id)
             ->where('state', 'vendida')
             ->sum('price');
 
-        // Asumiendo un 10% de comisión para la plataforma
-        $sellerEarnings = $totalEarnings * 0.9;
+        //8% de comisión
+        $sellerEarnings = $totalEarnings * 0.8;
 
         return response()->json([
             'total_earnings' => (float) $sellerEarnings,
